@@ -96,11 +96,11 @@
     }
 
     .text-primary{
-        color: #1f1b41;
+        color: #1e411b;
     }
 
     .btn-primary{
-        background-color: #1f1b41;
+        background-color: #1e411b;
         color: #FFFFFF;
         border: none;
     }
