@@ -16,13 +16,42 @@
 
     <div class="main">
       <h4 class="intro">
-        A web application that enables you to view soil data captured by
-        the hardware-based system situated at a remote place. You can view all
+        A web application that enables you to view soil data captured by the
+        hardware-based system situated at a remote place. You can view all
         captured data or select data for a particular date.
       </h4>
 
       <div class="main-inner">
         <div class="form-div">
+          <div class="manual-capture">
+            <p>Initiate the capture of data from remote sensors</p>
+            <button
+              class="btn-primary btn-start"
+              :style="
+                isCapturing
+                  ? 'background-color: grey; cursor: none;'
+                  : 'background-color: #1e411b; cursor: pointer;'
+              "
+              :disabled="isCapturing"
+              @click="startCapture"
+            >
+              Start
+            </button>
+            <button
+              class="btn-danger btn-stop"
+              :style="
+                !isCapturing
+                  ? 'background-color: grey; cursor: none;'
+                  : 'background-color: rgb(158, 35, 35); cursor: pointer;'
+              "
+              :disabled="!isCapturing"
+              @click="stopCapture"
+            >
+              Stop
+            </button>
+          </div>
+          <hr />
+          <p>View previously captured data</p>
           <input
             type="date"
             class="id-field"
@@ -87,6 +116,7 @@
 
 <script>
 import axios from "axios";
+import helpers from "../helpers";
 
 export default {
   name: "Home",
@@ -96,6 +126,7 @@ export default {
       email: "",
       date: "",
       tagLine: "",
+      isCapturing: false,
       getDataButtonText: "Get data",
       getAllDataButtonText: "Get all data",
       loading: false,
@@ -105,6 +136,23 @@ export default {
   },
 
   methods: {
+    startCapture: function () {
+      const shouldContinue = window.confirm(
+        "Please make sure the hardware system is powered on before continuing. Continue?"
+      );
+
+      if (shouldContinue) {
+        this.isCapturing = true;
+        helpers.startCapture();
+      }
+    },
+
+    stopCapture: function () {
+      this.isCapturing = false;
+        helpers.stopCapture();
+        alert("Stopped capture from remote sensor");
+    },
+
     getEnvironmentDataByDate: function () {
       this.isAllData = null;
       this.loading = true;
@@ -181,7 +229,7 @@ export default {
     },
 
     getUrl: function () {
-      return "https://ismm-be.onrender.com/api/v1/soil-moistures"
+      return "https://ismm-be.onrender.com/api/v1/soil-moistures";
     },
   },
 
@@ -212,6 +260,12 @@ export default {
 
 .btn-primary {
   background-color: #1e411b;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-danger {
+  background-color: rgb(158, 35, 35);
   color: #ffffff;
   border: none;
 }
@@ -269,7 +323,6 @@ export default {
   letter-spacing: 0.2em;
 }
 
-
 .landing button {
   margin-top: 25px;
   border-radius: 10px;
@@ -315,6 +368,26 @@ export default {
 
 .form-div .get-all-data-btn {
   width: 100%;
+}
+
+.form-div .manual-capture {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.form-div hr {
+  height: 1px;
+  background-color: rgb(226, 226, 226);
+  border: none;
+}
+
+.btn-start,
+.btn-stop {
+  width: 49%;
+}
+
+.btn-start {
+  margin-right: 2%;
 }
 
 table {
